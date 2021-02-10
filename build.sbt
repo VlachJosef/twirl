@@ -5,9 +5,9 @@ import org.scalajs.jsenv.nodejs.NodeJSEnv
 // Binary compatibility is this version
 val previousVersion: Option[String] = Some("1.5.0")
 
-val ScalaTestVersion              = "3.2.3"
-val ScalaXmlVersion               = "1.3.0"
-val ScalaParserCombinatorsVersion = "1.1.2"
+val ScalaTestVersion              = "3.2.5"
+val ScalaXmlVersion               = "2.0.0-M5"
+val ScalaParserCombinatorsVersion = "1.2.0-M2"
 
 val mimaSettings = Seq(
   mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
@@ -60,7 +60,8 @@ lazy val api = crossProject(JVMPlatform, JSPlatform)
       )
     ),
     libraryDependencies += "org.scala-lang.modules" %%% "scala-xml" % ScalaXmlVersion,
-    libraryDependencies += "org.scalatest"          %%% "scalatest" % ScalaTestVersion % Test,
+    libraryDependencies += "org.scalatest"          %%% "scalatest" % ScalaTestVersion % Test
+       exclude("org.scala-lang.modules", "scala-xml_2.13"),
   )
 
 lazy val apiJvm = api.jvm
@@ -74,7 +75,7 @@ lazy val parser = project
     name := "twirl-parser",
     libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % ScalaParserCombinatorsVersion % Optional,
     libraryDependencies += "com.novocode"            % "junit-interface"          % "0.11"                        % Test,
-    libraryDependencies += "org.scalatest"         %%% "scalatest"                % ScalaTestVersion              % Test,
+    libraryDependencies += "org.scalatest"         %%% "scalatest"                % ScalaTestVersion              % Test exclude("org.scala-lang.modules", "scala-xml_2.13"),
   )
 
 lazy val compiler = project
@@ -84,7 +85,11 @@ lazy val compiler = project
   .settings(
     mimaSettings,
     name := "twirl-compiler",
-    libraryDependencies += "org.scala-lang"          % "scala-compiler"           % scalaVersion.value,
+    libraryDependencies +=
+      (if (ScalaArtifacts.isScala3(scalaVersion.value))
+        "org.scala-lang" %% "scala3-compiler" % scalaVersion.value
+      else
+        "org.scala-lang" % "scala-compiler" % scalaVersion.value),
     libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % ScalaParserCombinatorsVersion % "optional",
     run / fork := true,
   )
