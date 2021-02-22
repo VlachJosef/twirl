@@ -9,6 +9,10 @@ val ScalaTestVersion              = "3.2.5"
 val ScalaXmlVersion               = "2.0.0-M5"
 val ScalaParserCombinatorsVersion = "1.2.0-M2"
 
+// temporarily needed for scaladoc generation Scala 3.0.0-RC1 -- we ought to be
+// able to remove this by the time 3.0.0 final rolls around
+ThisBuild / resolvers += Resolver.JCenterRepository
+
 val mimaSettings = Seq(
   mimaPreviousArtifacts := previousVersion.map(organization.value %% name.value % _).toSet
 )
