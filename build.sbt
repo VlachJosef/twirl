@@ -5,9 +5,9 @@ import org.scalajs.jsenv.nodejs.NodeJSEnv
 // Binary compatibility is this version
 val previousVersion: Option[String] = Some("1.5.0")
 
-val ScalaTestVersion              = "3.2.5"
-val ScalaXmlVersion               = "2.0.0-M5"
-val ScalaParserCombinatorsVersion = "1.2.0-M2"
+val ScalaTestVersion              = "3.2.7"
+val ScalaXmlVersion               = "2.0.0-RC1"
+val ScalaParserCombinatorsVersion = "1.2.0-RC1"
 
 // temporarily needed for scaladoc generation Scala 3.0.0-RC1 -- we ought to be
 // able to remove this by the time 3.0.0 final rolls around
@@ -116,7 +116,7 @@ lazy val plugin = project
         val _ = publishLocal
           .all(
             ScopeFilter(
-              inDependencies(compiler)
+              inAnyProject
             )
           )
           .value
